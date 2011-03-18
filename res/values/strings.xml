@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, MainAcitivity!</string>
+    <string name="app_name">SoundCloudClient</string>
+    <string name="CONSUMER_KEY">AIBMBzom4aIwS64tzA3uvg</string>
+    <string name="CONSUMER_SECRET">FwvM54R1RaYSOatSuRJA8lvqnycVLeH4OqIDGf4zI</string>
+</resources>

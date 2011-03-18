@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical">
+  <TextView
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:text="Your email address"></TextView>
+  <EditText
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:id="@+id/usernameET"></EditText>
+  <TextView
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:text="Your password"></TextView>
+  <EditText
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:password="true"
+  android:id="@+id/passwordET"></EditText>
+  <ImageButton
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:id="@+id/connectBtn"
+  android:background="@drawable/scconnectbutton"></ImageButton>
+</LinearLayout>

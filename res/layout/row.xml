@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="horizontal"	
+	android:background="@drawable/single_row"
+	android:id="@+id/selector">
+	>	
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal"		
+	>
+	<ImageView android:layout_width="70px"
+	android:layout_height="70px"
+	android:id="@+id/avatarIV"
+	></ImageView>
+	</LinearLayout>
+	
+	
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"	
+	android:gravity="center_vertical"
+	android:paddingLeft="8px"
+	android:layout_weight="2">	
+								<TextView android:id="@+id/titleTV"
+											android:layout_width="wrap_content"
+											android:layout_height="wrap_content"				
+											android:textSize="18px"
+											android:textColor="#000000"
+											android:singleLine="true"
+											android:ellipsize="end"				
+											android:padding="0px"
+											android:clickable="false"
+											android:textStyle="bold"/>
+								<TextView android:id="@+id/artistTV"
+											android:layout_width="wrap_content"
+											android:layout_height="wrap_content"				
+											android:textSize="16px"
+											android:singleLine="true"
+											android:ellipsize="end"				
+											android:padding="0px"
+											android:textColor="#5D5A5A"
+											android:clickable="false"/>				
+				
+	</LinearLayout>		
+	<!--  <LinearLayout android:layout_width="wrap_content"
+				android:layout_height="fill_parent"
+				android:gravity="center_vertical"
+				android:paddingRight="10px"
+				android:id="@+id/progressbarcontainer">
+				<ProgressBar android:id="@+id/rowprogressbar"
+				    android:layout_width="fill_parent" android:layout_height="8dip" 
+				    style="?android:attr/progressBarStyleHorizontal" 
+				    android:indeterminateOnly="false" 
+				    android:max="100"
+				    android:visibility="invisible">
+				</ProgressBar>				
+				</LinearLayout>	-->
+</LinearLayout>
