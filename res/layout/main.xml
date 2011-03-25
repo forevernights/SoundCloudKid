@@ -1,8 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-<Button android:text="Button" android:id="@+id/btnConnect" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:gravity="center_vertical">
+    <TableLayout android:id="@+id/TableLayout01" android:shrinkColumns="*"
+        android:layout_height="wrap_content" android:layout_width="fill_parent">
+        <TableRow android:id="@+id/TableRow01" android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageButton android:layout_width="wrap_content" 
+                android:layout_height="wrap_content" android:id="@+id/btnSettings" 
+                android:background="@drawable/ic_main_headphone_state"/>
+            <ImageButton android:id="@+id/searchtrack"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:background="@drawable/ic_main_box_state"/>
+        </TableRow>
+        <TableRow android:id="@+id/TableRow02" android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageButton android:id="@+id/downloadtrack"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:background="@drawable/ic_main_ipod_state"/>
+            <ImageButton android:id="@+id/Button04"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:background="@drawable/ic_main_music_state"/>
+        </TableRow>
+        <TableRow android:id="@+id/TableRow03" android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageButton android:id="@+id/Button03"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:background="@drawable/ic_main_picture_state"/>
+            <ImageButton android:id="@+id/Button04"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:background="@drawable/ic_main_group_state"/>
+        </TableRow>
+    </TableLayout>
 </LinearLayout>
+

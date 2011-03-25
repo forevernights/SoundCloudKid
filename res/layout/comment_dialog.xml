@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/layout_root"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:padding="10dp">
+      <EditText android:id="@+id/commentET"
+      			android:lines="2"
+      			android:layout_width="fill_parent"
+      			android:layout_height="wrap_content"></EditText>
+      <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/layout_root"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content">
+              <Button android:id="@+id/postCommentBtn"
+              android:text="Post"
+              android:layout_height="wrap_content"
+              android:layout_width="wrap_content"
+              android:layout_weight="1"></Button>
+              <Button android:id="@+id/cancelCommentBtn"
+              android:text="Cancel"
+              android:layout_height="wrap_content"
+              android:layout_width="wrap_content"
+              android:layout_weight="1"></Button>
+              </LinearLayout>
+</LinearLayout>

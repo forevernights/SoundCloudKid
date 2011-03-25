@@ -8,15 +8,14 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".TrackTabWidget"
-                  android:label="@string/app_name"
-                  android:theme="@android:style/Theme.NoTitleBar">
+        <activity android:name=".MediaPlayerActivity"
+                  android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-		<activity android:name=".MainActivity"
+		<activity android:name=".TrackTabWidget"
 				android:label="Main Activity"></activity>
 		
 		<activity android:name=".AuthenticationActivity"
@@ -25,16 +24,24 @@
 		<activity android:name=".TrackActivity"
 				android:label="Track Activity"></activity>		
 				
-		<activity android:name=".MediaPlayerActivity"
+		<activity android:name=".MainActivity"
 				android:label="Media Player Activity"></activity>	
 				
 		<activity android:name=".HottestTrackActivity"
 				android:label="Hottest Track Activity"></activity>
 				
-		<activity android:name=".LatestTrackActivity"
-				android:label="Latest Track Activity"></activity>		
+		<activity android:label="Latest Track Activity" android:name=".LatestTrackActivity"></activity>		
 						
 		<activity android:name=".SearchTrackActivity"
-				android:label="Search Track Activity"></activity>					
+				android:label="Search Track Activity"></activity>	
+		
+		<activity android:name=".DownloadTrackActivity"
+				android:label="Downloaded Track Activity"></activity>		
+				
+		<service android:enabled="true"
+             android:label="MediaPlayerService"
+             android:permission="android.permission.INTERNET"
+             android:process=":remote" android:name=".MediaPlayerService" android:exported="false"/>
+    		
     </application>
 </manifest>

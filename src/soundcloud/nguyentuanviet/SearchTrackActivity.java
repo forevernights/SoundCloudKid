@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,7 +21,9 @@ import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.message.BasicNameValuePair;
 import org.urbanstew.soundcloudapi.SoundCloudAPI;
 import org.urbanstew.soundcloudapi.SoundCloudAPI.OAuthVersion;
 import org.w3c.dom.Document;
@@ -32,9 +35,11 @@ import soundcloud.nguyentuanviet.adapter.MyArrayAdapter;
 import soundcloud.nguyentuanviet.entities.Track;
 import soundcloud.nguyentuanviet.quickaction.ActionItem;
 import soundcloud.nguyentuanviet.quickaction.QuickAction;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -64,10 +69,7 @@ public class SearchTrackActivity extends ListActivity {
 	MyArrayAdapter myAdapter;
 	SoundCloudAPI api;
 	Handler handler;
-	//views
-	private EditText searchET;
-	private Button buttonSearch;
-	private ViewSwitcher switcher;
+	
 	//static values
 	public final static String TRACK_ID = "";
 	public final static String STREAM_URL = "";
@@ -78,20 +80,34 @@ public class SearchTrackActivity extends ListActivity {
 		
 		//obtain saved authentication
 		//this.obtainSavedAuthentication();
+		getFreshAuthentication();
 		setupViews();
+		setListView();
 		new InitActivity().execute();
 		setUpQuickActionItems();		
 	}
-	//fresh authentication in case saved authentication failed
+	//fresh authentication and saved authentication
 	private void getFreshAuthentication(){
 		api = new SoundCloudAPI(getResources().getString(R.string.CONSUMER_KEY), getResources().getString(R.string.CONSUMER_SECRET), SoundCloudAPI.USE_PRODUCTION.with(OAuthVersion.V2_0));
 		try {
 			api.obtainAccessToken("darkoftime@gmail.com","`123qwer");
+			/*api = new SoundCloudAPI(getResources().getString(R.string.CONSUMER_KEY), 
+					getResources().getString(R.string.CONSUMER_SECRET), api.getToken(), 
+					api.getTokenSecret());*/
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void obtainSavedAuthentication(){
+		SharedPreferences pref = this.getSharedPreferences(AuthenticationActivity.PREFERENCES,MODE_WORLD_READABLE);
+		String token = pref.getString(AuthenticationActivity.TOKEN, "");
+		String tokenSecret = pref.getString(AuthenticationActivity.TOKENSECRET, null);
+		api = new SoundCloudAPI(getResources().getString(R.string.CONSUMER_KEY), 
+				getResources().getString(R.string.CONSUMER_SECRET), token, tokenSecret);
+
 	}
 	//set listivew
 	int selectedTrackPos = 0;
@@ -128,6 +144,51 @@ public class SearchTrackActivity extends ListActivity {
 				}
 			}
         });
+	}
+	private void showCommentDialog(){
+		final Dialog dialog = new Dialog(this);
+    	dialog.setContentView(R.layout.comment_dialog);
+    	dialog.setTitle("Quick comment box");
+        Button postCommentBtn = (Button)dialog.findViewById(R.id.postCommentBtn);
+        Button cancelCommentBtn = (Button)dialog.findViewById(R.id.cancelCommentBtn);
+        final EditText commentBox = (EditText)dialog.findViewById(R.id.commentET);
+        postCommentBtn.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				List<NameValuePair> params = new java.util.ArrayList<NameValuePair>();
+				params.add(new BasicNameValuePair("comment[body]", commentBox.getText().toString()));				                                
+				try {
+					HttpResponse response = api.post("tracks/" + tracklist.get(selectedTrackPos).getTrack_id() + "/comments", params);
+					if(response.getStatusLine().getStatusCode()==201){
+						inform("Comment successfully created.");
+					}
+					else{
+						inform("Failed to post comment. Something goes wrong!");
+					}
+				} catch (OAuthMessageSignerException e) {
+					e.printStackTrace();
+				} catch (OAuthExpectationFailedException e) {
+					e.printStackTrace();
+				} catch (ClientProtocolException e) {
+					e.printStackTrace();
+				} catch (OAuthCommunicationException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				dialog.dismiss();
+			}
+        });
+        cancelCommentBtn.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+        	
+        });
+    	dialog.show();
 	}
 	/** set up quickation menu **/
 	ActionItem commentItem = new ActionItem();
@@ -181,12 +242,12 @@ public class SearchTrackActivity extends ListActivity {
 		playItem.setOnClickListener(new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			/*
+			
 			Intent myIntent = new Intent(SearchTrackActivity.this,MediaPlayerActivity.class);
 			myIntent.putExtra(TRACK_ID, tracklist.get(selectedTrackPos).getTrack_id());
 			myIntent.putExtra(STREAM_URL, tracklist.get(selectedTrackPos).getStreamURL());
 			startActivity(myIntent);
-			*/
+			
 		}
 		});
 		//favorite track
@@ -195,7 +256,20 @@ public class SearchTrackActivity extends ListActivity {
 		favItem.setOnClickListener(new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			
+			try {
+				HttpResponse response = api.put("me/favorites/" + tracklist.get(selectedTrackPos).getTrack_id());
+			} catch (OAuthMessageSignerException e) {
+				e.printStackTrace();
+			} catch (OAuthExpectationFailedException e) {
+				e.printStackTrace();
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (OAuthCommunicationException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 		}
 		});
 		//comment on track
@@ -204,7 +278,7 @@ public class SearchTrackActivity extends ListActivity {
 		commentItem.setOnClickListener(new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			
+			showCommentDialog();
 		}
 		});
 		//download track
@@ -214,12 +288,20 @@ public class SearchTrackActivity extends ListActivity {
 		@Override
 		public void onClick(View v) {
 			if(checkMediaState()){
-				if(tracklist.get(selectedTrackPos).getDownloadURL().equals("")){
+				if(tracklist.get(selectedTrackPos).getDownloadURL().equals("")
+						&&tracklist.get(selectedTrackPos).getStreamURL().equals("")){
 					inform("Download not available!");
 				}
 				else{
-					String downloadString = tracklist.get(selectedTrackPos).getDownloadURL()+
-											"?consumer_key=AIBMBzom4aIwS64tzA3uvg";
+					String downloadString="";
+					if(tracklist.get(selectedTrackPos).getDownloadURL().equals("")){
+						downloadString = tracklist.get(selectedTrackPos).getStreamURL()+
+						"?consumer_key=AIBMBzom4aIwS64tzA3uvg";
+					}
+					else{
+						downloadString = tracklist.get(selectedTrackPos).getDownloadURL()+
+						"?consumer_key=AIBMBzom4aIwS64tzA3uvg";
+					}
 					new DownloadTrackTasks().execute(downloadString);
 				}
 			}
@@ -229,7 +311,7 @@ public class SearchTrackActivity extends ListActivity {
 		}
 		});
 	}
-	
+
 	/** get artwork**/
 	Drawable artwork;
 	private Drawable getArtwork(String link){
@@ -357,33 +439,27 @@ public class SearchTrackActivity extends ListActivity {
 		newTrack.setDownloadURL(downURL);
 		return newTrack;
 	}
-	private void obtainSavedAuthentication(){
-		SharedPreferences pref = this.getSharedPreferences(AuthenticationActivity.PREFERENCES,MODE_WORLD_READABLE);
-		String token = pref.getString(AuthenticationActivity.TOKEN, "");
-		String tokenSecret = pref.getString(AuthenticationActivity.TOKENSECRET, null);
-		api = new SoundCloudAPI(getResources().getString(R.string.CONSUMER_KEY), 
-				getResources().getString(R.string.CONSUMER_SECRET), token, tokenSecret);
 
-	}
 	private void inform(String message){
 	    	Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 	}
 	/** setup UI elements**/
+	//views
+	private EditText searchET;
+	private Button buttonSearch;
 	private void setupViews(){
 		//set views
-		buttonSearch = (Button)findViewById(R.id.searchBtn);
-		searchET = (EditText)findViewById(R.id.searchET);
+		buttonSearch = (Button)findViewById(R.id.searchTrackBtn);
+		searchET = (EditText)findViewById(R.id.searchTrackET);
 		//set event listener for button search
 		buttonSearch.setOnClickListener(new OnClickListener(){
-
 			@Override
 			public void onClick(View v) {
 				new InitActivity().execute();
-			}
-		
+			}		
 		});		
 	}
-	
+	private ViewSwitcher switcher;
 	private void setupUI(){
 	  //create the ViewSwitcher in the current context
 	  switcher = new ViewSwitcher(this);
@@ -470,14 +546,19 @@ public class SearchTrackActivity extends ListActivity {
 		@Override 
 		/* Background Task is Done */
 		protected void onPostExecute(Object result) {
-			//go back to the first view
 			setupUI();
-			setListView();
 		}
 
 		@Override
 		protected Object doInBackground(Object... params) {
-			getFreshAuthentication();
+			/*if(searchET.getText().toString().equals("")){
+				
+			}
+			else{
+				String searchterm = searchET.getText().toString().replaceAll(" ", "+");
+				tracklist.clear();
+				loadTrackInfo(searchterm);	
+			}*/
 			loadTrackInfo("SNSD");
 			return null;
 		}
@@ -524,7 +605,10 @@ public class SearchTrackActivity extends ListActivity {
 					if (is == null) {
 			        	Log.e(getClass().getName(), "Unable to create InputStream for url:" + redirectURL);
 			        }
-					FileOutputStream fos = new FileOutputStream(dir+"/"+"test1.mp3");
+					FileOutputStream fos = new FileOutputStream(dir+"/"+
+							tracklist.get(selectedTrackPos).getTitle()+
+							String.valueOf(tracklist.get(selectedTrackPos).getTrack_id())+
+							".mp3");
 					byte buffer[] = new byte[16384];
 					long totalBytesRead = 0;
 					int numread = 0;

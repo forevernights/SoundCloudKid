@@ -11,10 +11,10 @@
 	  <EditText android:layout_width="wrap_content"
 	  android:layout_height="wrap_content"
 	  android:layout_weight="2"
-	  android:id="@+id/searchET"></EditText>
+	  android:id="@+id/searchTrackET"></EditText>
 	  <Button android:layout_width="wrap_content"
 	  android:layout_height="wrap_content"
-	  android:id="@+id/searchBtn"
+	  android:id="@+id/searchTrackBtn"
 	  android:text="Search"></Button>
 	  </LinearLayout>
 	<LinearLayout
@@ -28,5 +28,9 @@
 					android:divider="@drawable/layer_list"
 					android:dividerHeight="1px" 
 					android:headerDividersEnabled="false"></ListView>
+		<TextView android:id="@android:id/empty"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:text="There is no track to show at current time yet!"/>			
 	</LinearLayout>
 </LinearLayout>
